@@ -15,7 +15,8 @@ var percent = (function() {
       // {name: "Census Population", id: "censuspop", key: "CENSUS%dPOP", years: [2010]},
       // {name: "Estimate Base", id: "censuspop", key: "ESTIMATESBASE%d", years: [2010]},
       {name: "Population Estimate", id: "popest", key: "POPESTIMATE%d"},
-      {name: "Population Change", id: "popchange", key: "NPOPCHG_%d", format: "+,"}
+      {name: "Population Change", id: "popchange", key: "NPOPCHG_%d", format: "+,"},
+      {name: "Equal Size", id: "eqsize", key: "EQSIZE%d"},
     ],
     years = [2010, 2011],
     fieldsById = d3.nest()
