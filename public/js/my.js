@@ -15,20 +15,7 @@ var percent = (function() {
       // {name: "Census Population", id: "censuspop", key: "CENSUS%dPOP", years: [2010]},
       // {name: "Estimate Base", id: "censuspop", key: "ESTIMATESBASE%d", years: [2010]},
       {name: "Population Estimate", id: "popest", key: "POPESTIMATE%d"},
-      {name: "Population Change", id: "popchange", key: "NPOPCHG_%d", format: "+,"},
-      {name: "Births", id: "births", key: "BIRTHS%d"},
-      {name: "Deaths", id: "deaths", key: "DEATHS%d"},
-      {name: "Natural Increase", id: "natinc", key: "NATURALINC%d", format: "+,"},
-      {name: "Int'l Migration", id: "intlmig", key: "INTERNATIONALMIG%d", format: "+,"},
-      {name: "Domestic Migration", id: "domesticmig", key: "DOMESTICMIG%d", format: "+,"},
-      {name: "Net Migration", id: "netmig", key: "NETMIG%d", format: "+,"},
-      {name: "Residual", id: "residual", key: "RESIDUAL%d", format: "+,"},
-      {name: "Birth Rate", id: "birthrate", key: "RBIRTH%d", years: [2011], format: percent},
-      {name: "Death Rate", id: "deathrate", key: "RDEATH%d", years: [2011], format: percent},
-      {name: "Natural Increase Rate", id: "natincrate", key: "RNATURALINC%d", years: [2011], format: percent},
-      {name: "Int'l Migration Rate", id: "intlmigrate", key: "RINTERNATIONALMIG%d", years: [2011], format: percent},
-      {name: "Net Domestic Migration Rate", id: "domesticmigrate", key: "RDOMESTICMIG%d", years: [2011], format: percent},
-      {name: "Net Migration Rate", id: "netmigrate", key: "RNETMIG%d", years: [2011], format: percent},
+      {name: "Population Change", id: "popchange", key: "NPOPCHG_%d", format: "+,"}
     ],
     years = [2010, 2011],
     fieldsById = d3.nest()
@@ -110,14 +97,11 @@ window.onhashchange = function() {
   parseHash();
 };
 
-var segmentized = location.search === "?segmentized",
-    url = ["public/data",
-      segmentized ? "us-states-segmentized.topojson" : "us-states.topojson"
-    ].join("/");
+var url = ["public/data","us-states.topojson"].join("/");
 d3.json(url, function(topo) {
   topology = topo;
   geometries = topology.objects.states.geometries;
-  d3.csv("public/data/nst_2011.csv", function(data) {
+  d3.csv("public/data/us-states.csv", function(data) {
     rawData = data;
     dataById = d3.nest()
       .key(function(d) { return d.NAME; })
