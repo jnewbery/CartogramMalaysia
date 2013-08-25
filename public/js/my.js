@@ -15,10 +15,9 @@ var percent = (function() {
       // {name: "Census Population", id: "censuspop", key: "CENSUS%dPOP", years: [2010]},
       // {name: "Estimate Base", id: "censuspop", key: "ESTIMATESBASE%d", years: [2010]},
       {name: "Population Estimate", id: "popest", key: "POPESTIMATE%d"},
-      {name: "Population Change", id: "popchange", key: "NPOPCHG_%d", format: "+,"},
       {name: "Equal Size", id: "eqsize", key: "EQSIZE%d"},
     ],
-    years = [2010, 2011],
+    years = [2010],
     fieldsById = d3.nest()
       .key(function(d) { return d.id; })
       .rollup(function(d) { return d[0]; })
@@ -80,7 +79,7 @@ function updateZoom() {
     "scale(" + [scale, scale] + ")");
 }
 
-var proj = d3.geo.albersUsa(),
+var proj = d3.geo.mercator().center([109,4]).scale(2500),
     topology,
     geometries,
     rawData,
@@ -98,11 +97,11 @@ window.onhashchange = function() {
   parseHash();
 };
 
-var url = ["public/data","us-states.topojson"].join("/");
+var url = ["public/data","malaysia-states.topojson"].join("/");
 d3.json(url, function(topo) {
   topology = topo;
   geometries = topology.objects.states.geometries;
-  d3.csv("public/data/us-states.csv", function(data) {
+  d3.csv("public/data/malaysia-states.csv", function(data) {
     rawData = data;
     dataById = d3.nest()
       .key(function(d) { return d.NAME; })
