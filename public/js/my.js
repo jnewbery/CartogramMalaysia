@@ -1,11 +1,8 @@
-// hide the form if the browser doesn't do SVG,
-// (then just let everything else fail)
+// If the browser doesn't do SVG, hide the form and let everything else fail
 if (!document.createElementNS) {
   document.getElementsByTagName("form")[0].style.display = "none";
 }
 
-// field definitions from:
-// <http://www.census.gov/popest/data/national/totals/2011/files/NST-EST2011-alldata.pdf>
 var percent = (function() {
       var fmt = d3.format(".2f");
       return function(n) { return fmt(n) + "%"; };
@@ -16,8 +13,8 @@ var percent = (function() {
       // {name: "Estimate Base", id: "censuspop", key: "ESTIMATESBASE%d", years: [2010]},
       {name: "Population Estimate", id: "popest", key: "POPESTIMATE%d"},
       {name: "Equal Size", id: "eqsize", key: "EQSIZE%d"},
-    ],
-    years = [2010],
+    ], // This should be factored out to stats.json
+    years = config.years, // This should be factored out to stats.json
     fieldsById = d3.nest()
       .key(function(d) { return d.id; })
       .rollup(function(d) { return d[0]; })
@@ -79,7 +76,7 @@ function updateZoom() {
     "scale(" + [scale, scale] + ")");
 }
 
-var proj = d3.geo.mercator().center([109,4]).scale(2500),
+var proj = d3.geo.mercator().center(config.center).scale(config.scale), //These parameters should be factored out to config.js
     topology,
     geometries,
     rawData,
@@ -97,11 +94,10 @@ window.onhashchange = function() {
   parseHash();
 };
 
-var url = ["public/data","malaysia-states.topojson"].join("/");
-d3.json(url, function(topo) {
+d3.json(config.states_url, function(topo) {
   topology = topo;
   geometries = topology.objects.states.geometries;
-  d3.csv("public/data/malaysia-states.csv", function(data) {
+  d3.csv(config.stats_url, function(data) {
     rawData = data;
     dataById = d3.nest()
       .key(function(d) { return d.NAME; })
@@ -113,18 +109,17 @@ d3.json(url, function(topo) {
 
 function init() {
   var features = carto.features(topology, geometries),
-      path = d3.geo.path()
-        .projection(proj);
+      path = d3.geo.path().projection(proj);
 
   states = states.data(features)
     .enter()
     .append("path")
-      .attr("class", "state")
-      .attr("id", function(d) {
-        return d.properties.NAME;
-      })
-      .attr("fill", "#fafafa")
-      .attr("d", path);
+    .attr("class", "state")
+    .attr("id", function(d) {
+      return d.properties.NAME;
+    })
+    .attr("fill", "#fafafa")
+    .attr("d", path);
 
   states.append("title");
 
@@ -136,8 +131,7 @@ function reset() {
   body.classed("updating", false);
 
   var features = carto.features(topology, geometries),
-      path = d3.geo.path()
-        .projection(proj);
+      path = d3.geo.path().projection(proj);
 
   states.data(features)
     .transition()
@@ -239,12 +233,9 @@ function parseHash() {
   fieldSelect.property("selectedIndex", fields.indexOf(field));
 
   if (field.id === "none") {
-
     yearSelect.attr("disabled", "disabled");
     reset();
-
   } else {
-
     if (field.years) {
       if (field.years.indexOf(year) === -1) {
         year = field.years[0];

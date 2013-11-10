@@ -1,0 +1,14 @@
+[
+  { "name":"Area",
+    "id":"area",
+    "unit":"km<sup>2</sup>, thousands",
+    "map":false,
+    "values":[243,91,49,19210,9500,15099,1664,6686,36137,21035,821,1048,73631,124450,8104,13035]
+  },
+  { "name":"Population",
+    "id":"population",
+    "unit":"people, thousands",
+    "map":false,
+    "values":[1627,85,67,3233,1890,1459,788,997,1443,2258,227,1520,3120,2420,5411,1015]
+  }
+]
